@@ -1,0 +1,27 @@
+- hosts: all
+  tasks:
+    - name: Install Docker Python ubuntu
+      apt:
+        pkg:
+          - python3
+          - python3-docker
+        state: present
+      when: ansible_facts['os_family'] ==  "Debian"
+
+    - name: install docker python centos
+      yum:
+        name:
+          - epel-release
+          - python3
+          - python3-docker
+      when: ansible_facts['os_family'] == 'Redhat'
+
+    - name: running container
+      docker_container:
+        name: docker-ansible
+        image: wfirnando/web-wingky
+        published_ports:
+          - 10000:80
+        recreate: yes
+        state: started
+        pull: yes
